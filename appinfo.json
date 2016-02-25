@@ -1,0 +1,43 @@
+{
+    "appKeys": {
+        "OWMWeatherAppMessageKeyBadKey": 91,
+        "OWMWeatherAppMessageKeyDescriptionShort": 2,
+        "OWMWeatherAppMessageKeyHum": 9,
+        "OWMWeatherAppMessageKeyIcon": 6,
+        "OWMWeatherAppMessageKeyLocationUnavailable": 92,
+        "OWMWeatherAppMessageKeyName": 3,
+        "OWMWeatherAppMessageKeyReply": 1,
+        "OWMWeatherAppMessageKeyRequest": 0,
+        "OWMWeatherAppMessageKeySunrise": 7,
+        "OWMWeatherAppMessageKeySunset": 8,
+        "OWMWeatherAppMessageKeyTempK": 4,
+        "OWMWeatherAppMessageKeyWind": 5
+    },
+    "capabilities": [
+        "location"
+    ],
+    "companyName": "Nikolai Rinas",
+    "enableMultiJS": false,
+    "longName": "DigiMe",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "fonts/moon_phases.ttf",
+                "name": "FONT_MOON_24",
+                "targetPlatforms": null,
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "DigiMe",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "e953abd3-730a-498f-bb46-159905b5a570",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
