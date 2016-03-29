@@ -1,7 +1,8 @@
 # DigiMe
 Another nice pebble watchface
 
-![DigiMe](https://raw.githubusercontent.com/workinghard/DigiMe/master/img/DIGIMI-Sunshine.png)
+![DigiMe-Sunshine](https://raw.githubusercontent.com/workinghard/DigiMe/master/img/DIGIMI-Sunshine.png)
+![DigiMe-Moonshine](https://raw.githubusercontent.com/workinghard/DigiMe/master/img/DIGIMI-Moonshine2.png)
 
 ## My Intention
 I wanted to have one code base for a pebble watch face which is easy to modify and open source. This is a collection of most of the pebble developer tutorials. It includes:
