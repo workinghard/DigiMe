@@ -14,3 +14,4 @@ I wanted to have one code base for a pebble watch face which is easy to modify a
   
 I also thought about make some things configurable (like time format or temperature unit). But currently i don't like how it is implemented in pebble. You need to host an external website for this. I would need to create a dependency what i currently don't want. Perhaps later ... If you would like to have something different, feel free to post an feature request or just clone this project ...
 
+This watchface is also designed to be responsive and drain not too much battery. Even with so many features my battery lasts for 5 days. As usual, it's highly usage dependant. 
