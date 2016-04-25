@@ -1,6 +1,5 @@
 #pragma once
 #include <pebble.h>
-#include "owm_weather.h"
 #include "main.h"
 
 #define MY_BACKGROUND_COLOR GColorBlack 

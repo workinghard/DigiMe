@@ -1,5 +1,9 @@
 {
     "appKeys": {
+        "DIGIMEMessageKeySelAPIKEY": 12,
+        "DIGIMEMessageKeySelLan": 13,
+        "DIGIMEMessageKeySelTemp": 11,
+        "DIGIMEMessageKeySelTime": 10,
         "OWMWeatherAppMessageKeyBadKey": 91,
         "OWMWeatherAppMessageKeyDescriptionShort": 2,
         "OWMWeatherAppMessageKeyHum": 9,
@@ -14,7 +18,8 @@
         "OWMWeatherAppMessageKeyWind": 5
     },
     "capabilities": [
-        "location"
+        "location",
+        "configurable"
     ],
     "companyName": "Nikolai Rinas",
     "enableMultiJS": false,
@@ -36,7 +41,7 @@
         "basalt"
     ],
     "uuid": "e953abd3-730a-498f-bb46-159905b5a570",
-    "versionLabel": "1.0",
+    "versionLabel": "1.2",
     "watchapp": {
         "watchface": true
     }

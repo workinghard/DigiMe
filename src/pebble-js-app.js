@@ -11,6 +11,7 @@ function owmWeatherXHR(url, type, callback) {
   xhr.send();
 }
 
+
 function owmWeatherSendToPebble(json) {
   Pebble.sendAppMessage({
     'OWMWeatherAppMessageKeyReply': 1,
@@ -73,3 +74,34 @@ Pebble.addEventListener('appmessage', function(e) {
   console.log('appmessage: ' + JSON.stringify(e.payload));
   owmWeatherHandler(e);
 });
+
+Pebble.addEventListener('showConfiguration', function() {
+  var url = 'http://pebble.nikolai-rinas.de/pebbleConfig.html';
+
+  Pebble.openURL(url);
+});
+
+Pebble.addEventListener('webviewclosed', function(e) {
+  // Decode the user's preferences
+  var configData = JSON.parse(decodeURIComponent(e.response));
+
+  console.log('Configuration page returned: ' + JSON.stringify(configData));
+
+  // Send to the watchapp via AppMessage
+  var dict = {
+    'DIGIMEMessageKeySelTime': configData.select_time_format,
+    'DIGIMEMessageKeySelTemp': configData.select_temp_format,
+    'DIGIMEMessageKeySelAPIKEY': configData.set_api_key,
+    'DIGIMEMessageKeySelLan': configData.select_language
+  };
+  
+  // Send to the watchapp
+  Pebble.sendAppMessage(dict, function() {
+    console.log('Config data sent successfully!');
+  }, function(e) {
+    console.log('Error sending config data!');
+  });
+});
+
+
+

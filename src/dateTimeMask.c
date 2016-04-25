@@ -44,14 +44,14 @@ static void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed) {
     // Update the sun/moon position
     dayNight_update_pos();
     
+    if ( tick_time->tm_min == 0 ) {
+      // Update the date
+      local_update_date(tick_time);      
+    }
+    
     if (needToUpdate()) {
       // Request new weather data if needed
       owm_weather_fetch(weather_callback); 
-    }
-  }else{
-    if (units_changed & DAY_UNIT) {
-      // Update the date
-      local_update_date(tick_time);
     }
   }
 }
