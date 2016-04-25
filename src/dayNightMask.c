@@ -95,7 +95,9 @@ int getNightPosX(time_t sunrise, time_t sunset){
   }else{
     nightTime = now - sunset;     
   }
+#ifdef SETDEBUG  
   APP_LOG(APP_LOG_LEVEL_INFO, "Nightime: %ld duration: %ld", nightTime, nightDuration);
+#endif  
   int posX = 116 * nightTime / nightDuration;
   return posX;
 }
@@ -164,8 +166,9 @@ void dayNight_update_pos() {
   
   if ( isNight(now, sunrise, sunset) == false ) {
     // It's day
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_INFO, "It's day");
-    
+#endif    
     // Calculate the position
     int posX = getDayPosX(sunrise, sunset);
     // Reposition the sun
@@ -174,8 +177,9 @@ void dayNight_update_pos() {
     allLayerUpdate(true);
   }else{ 
     // It's night
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_INFO, "Is night");
-
+#endif
     int posX = getNightPosX(sunrise, sunset);
     // Reposition the moon
     layer_set_frame(text_layer_get_layer(s_moon_font_layer), GRect(posX, getNightPosY(posX),26,26));

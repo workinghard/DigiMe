@@ -28,7 +28,7 @@ static int weatherIcon = 1;
 static bool temp_fahrenheit = true;
 static char s_api_key[OWM_WEATHER_APIKEYSIZE];  
 
-const char api_key_default[] = "2cd34ef953aa6d4326799b5097536a0c";
+static const char api_key_default[] = "2cd34ef953aa6d4326799b5097536a0c";
 
 //static int oldTemp = 0;
 //static time_t lastFetch = 0.0;
@@ -73,12 +73,16 @@ bool needToUpdate() {
   // We don't have a valid data
   if ( oldTemp == TEMP_NOT_VALID || sunrise == 0.0 || sunset == 0.0 ) {
     needUpdate = true;
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_INFO, "Need update: %d sunrise: %ld sunset: %ld", oldTemp, sunrise, sunset);
+#endif
   }
   // Last update is too long ago
   if ( now - lastFetch > MY_REFRESH_INTERVAL) {
     needUpdate = true;
+#ifdef SETDEBUG     
     APP_LOG(APP_LOG_LEVEL_INFO, "Need update: data too old %ld", now-lastFetch);
+#endif    
   }
   return needUpdate;
 }
@@ -132,7 +136,9 @@ void loadData() {
     }else{
       sunrise = now + ( 6 - current_time->tm_hour ) * 3600;
     }
+#ifdef SETDEBUG     
     APP_LOG(APP_LOG_LEVEL_INFO, "guess sunrise is: = %ld", sunrise);    
+#endif
   }
   if ( persist_exists(KEY_SAVED_SUNSET) ){
     persist_read_data(KEY_SAVED_SUNSET, &sunset, sizeof(time_t));
@@ -144,7 +150,9 @@ void loadData() {
     }else{
       sunset = now + ( 18 - current_time->tm_hour ) * 3600;
     }
-    APP_LOG(APP_LOG_LEVEL_INFO, "guess sunset is: = %ld", sunset);   
+#ifdef SETDEBUG     
+    APP_LOG(APP_LOG_LEVEL_INFO, "guess sunset is: = %ld", sunset);  
+#endif    
   }
   if ( persist_exists(KEY_SAVED_FAHRENHEIT) ){
     temp_fahrenheit = persist_read_bool(KEY_SAVED_FAHRENHEIT);
@@ -178,9 +186,10 @@ static void main_window_load(Window *window) {
     // Register the JS handler delayed
     app_timer_register(3000, js_ready_handler, NULL);
   }
+#ifdef SETDEBUG   
   APP_LOG(APP_LOG_LEVEL_INFO, "Now: = %ld", time(NULL));
   APP_LOG(APP_LOG_LEVEL_INFO, "lastFetch = %ld", lastFetch);
-  
+#endif  
   // Init the line layer
   backgroundMask_load(window_layer);
   
@@ -216,14 +225,12 @@ static OWMWeatherCallback *s_callback;
 static OWMWeatherStatus s_status;
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+#ifdef SETDEBUG   
   APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
-  
-  // KeySelTime 10
-  // KeySelTemp 11
-  // KeySelAPIKEY 12
-  // KeySelLan 13
+#endif  
   // Parse response
   bool configResponse = false;
+  /*  
   Tuple *select_time = dict_find(iter, DIGIMEMessageKeySelTime);
   if(select_time) {
     bool twenty_four_format = select_time->value->int32 == 1;
@@ -234,15 +241,19 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     }
     configResponse = true;
   }
+  */
   Tuple *select_temp = dict_find(iter, DIGIMEMessageKeySelTemp);
   if(select_temp) {
     temp_fahrenheit = select_temp->value->int32 == 1;
+    configResponse = true;
+
+    /*
     if ( temp_fahrenheit ) {
       APP_LOG(APP_LOG_LEVEL_INFO, "Fahrenheit format");      
     }else{
       APP_LOG(APP_LOG_LEVEL_INFO, "Celsius format"); 
     }
-    configResponse = true;
+    */
   }
   Tuple *select_api_key = dict_find(iter, DIGIMEMessageKeySelAPIKEY);
   if (select_api_key) {
@@ -251,7 +262,9 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     if (strlen(s_api_key) < 32) {
       // Field is empty or small API key, take default
       strncpy(s_api_key, api_key_default, sizeof(api_key_default));
+#ifdef SETDEBUG      
       APP_LOG(APP_LOG_LEVEL_INFO, "Take default key"); 
+#endif      
     }
   }
   if (configResponse) {
@@ -270,12 +283,14 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 
     Tuple *sunr_tuple = dict_find(iter, OWMWeatherAppMessageKeySunrise);
     s_info->sunrise = sunr_tuple->value->int32;
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_INFO, "OWM Sunrise: %ld", s_info->sunrise);
-    
+#endif    
     Tuple *suns_tuple = dict_find(iter, OWMWeatherAppMessageKeySunset);
     s_info->sunset = suns_tuple->value->int32;
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_INFO, "OWM Sunset: %ld", s_info->sunset);
-    
+#endif    
     Tuple *temp_tuple = dict_find(iter, OWMWeatherAppMessageKeyTempK);
     s_info->temp_k = temp_tuple->value->int32;
     s_info->temp_c = s_info->temp_k - 273; 
@@ -306,7 +321,9 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 }
 
 static void fail_and_callback() {
+#ifdef SETDEBUG  
   APP_LOG(APP_LOG_LEVEL_ERROR, "Failed to send request!");
+#endif
   s_status = OWMWeatherStatusFailed;
   s_callback(s_info, s_status);
 }
@@ -338,7 +355,9 @@ void owm_weather_init(char *api_key) {
   }
 
   if(!api_key) {
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_ERROR, "API key was NULL!");
+#endif
     return;
   }
 
@@ -350,12 +369,16 @@ void owm_weather_init(char *api_key) {
 
 bool owm_weather_fetch(OWMWeatherCallback *callback) {
   if(!s_info) {
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_ERROR, "OWM Weather library is not initialized!");
+#endif
     return false;
   }
 
   if(!callback) {
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_ERROR, "OWMWeatherCallback was NULL!");
+#endif
     return false;
   }
 
@@ -380,7 +403,9 @@ void owm_weather_deinit() {
 
 OWMWeatherInfo* owm_weather_peek() {
   if(!s_info) {
+#ifdef SETDEBUG    
     APP_LOG(APP_LOG_LEVEL_ERROR, "OWM Weather library is not initialized!");
+#endif
     return NULL;
   }
 

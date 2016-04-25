@@ -5,6 +5,9 @@
 #include "dateTimeMask.h"
 #include "dayNightMask.h"
 
+// Activate this if you want to see debug messages
+//#define SETDEBUG 1
+
 #define TEMP_NOT_VALID -999
 #define KeySelTime 10
 #define KeySelTemp 11

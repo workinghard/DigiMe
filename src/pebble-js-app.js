@@ -29,11 +29,11 @@ function owmWeatherSendToPebble(json) {
 function owmWeatherLocationSuccess(pos) {
   var url = 'http://api.openweathermap.org/data/2.5/weather?lat=' + 
     pos.coords.latitude + '&lon=' + pos.coords.longitude + '&appid=' + owmWeatherAPIKey;
-  console.log('owm-weather: Location success. Contacting OpenWeatherMap.org...');
-  console.log(url);
+  //console.log('owm-weather: Location success. Contacting OpenWeatherMap.org...');
+  //console.log(url);
 
   owmWeatherXHR(url, 'GET', function(responseText) {
-    console.log('owm-weather: Got API response!');
+    //console.log('owm-weather: Got API response!');
     if(responseText.length > 100) {
       owmWeatherSendToPebble(JSON.parse(responseText));
     } else {
@@ -71,7 +71,7 @@ Pebble.addEventListener('ready', function (e) {
 });
 
 Pebble.addEventListener('appmessage', function(e) {
-  console.log('appmessage: ' + JSON.stringify(e.payload));
+  //console.log('appmessage: ' + JSON.stringify(e.payload));
   owmWeatherHandler(e);
 });
 
@@ -85,7 +85,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
   // Decode the user's preferences
   var configData = JSON.parse(decodeURIComponent(e.response));
 
-  console.log('Configuration page returned: ' + JSON.stringify(configData));
+  //console.log('Configuration page returned: ' + JSON.stringify(configData));
 
   // Send to the watchapp via AppMessage
   var dict = {
