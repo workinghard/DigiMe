@@ -12,7 +12,7 @@
 #define KeySelTime 10
 #define KeySelTemp 11
 #define KeySelAPIKEY 12
-#define KeySelLan 13
+#define KeySelLang 13
 
 // Start OWMWeather
 
@@ -100,3 +100,4 @@ int getOldTemp();
 int getWeatherIcon();
 time_t getSunrise();
 time_t getSunset();
+char getLang();

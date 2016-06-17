@@ -9,3 +9,4 @@
 
 void dateTimeMask_load(Layer *window_layer);
 void dateTimeMask_unload();
+void updateDateTime();

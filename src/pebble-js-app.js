@@ -76,7 +76,7 @@ Pebble.addEventListener('appmessage', function(e) {
 });
 
 Pebble.addEventListener('showConfiguration', function() {
-  var url = 'http://pebble.nikolai-rinas.de/pebbleConfig.html';
+  var url = 'http://pebble.nikolai-rinas.de/pebbleConfigV2.html';
 
   Pebble.openURL(url);
 });
@@ -92,7 +92,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
     'DIGIMEMessageKeySelTime': configData.select_time_format,
     'DIGIMEMessageKeySelTemp': configData.select_temp_format,
     'DIGIMEMessageKeySelAPIKEY': configData.set_api_key,
-    'DIGIMEMessageKeySelLan': configData.select_language
+    'DIGIMEMessageKeySelLang': configData.select_language
   };
   
   // Send to the watchapp

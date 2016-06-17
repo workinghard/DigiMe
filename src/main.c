@@ -7,6 +7,7 @@
 #define KEY_SAVED_SUNSET 3
 #define KEY_SAVED_FAHRENHEIT 4
 #define KEY_SAVED_APIKEY 5
+#define KEY_SAVED_LANG 6
 
 // Interval for refreshing the weather data
 #define MY_REFRESH_INTERVAL 3600 
@@ -15,7 +16,7 @@ typedef enum {
   DIGIMEMessageKeySelTime = KeySelTime,
   DIGIMEMessageKeySelTemp = KeySelTemp,
   DIGIMEMessageKeySelAPIKEY = KeySelAPIKEY,
-  DIGIMEKeySelLan = KeySelLan
+  DIGIMEKeySelLang = KeySelLang
 } DIGIMEMessageKey;
 
 
@@ -27,6 +28,7 @@ static time_t sunset = 0.0;
 static int weatherIcon = 1;
 static bool temp_fahrenheit = true;
 static char s_api_key[OWM_WEATHER_APIKEYSIZE];  
+static char myLang = 'e';
 
 static const char api_key_default[] = "2cd34ef953aa6d4326799b5097536a0c";
 
@@ -118,6 +120,10 @@ int getWeatherIcon() {
   return weatherIcon;
 }
 
+char getLang() {
+  return myLang;
+}
+
 void loadData() {
   if ( persist_exists(KEY_SAVED_TIMESTAMP) ) {
     persist_read_data(KEY_SAVED_TIMESTAMP, &lastFetch, sizeof(time_t));
@@ -163,7 +169,9 @@ void loadData() {
     strncpy(s_api_key, api_key_default, sizeof(api_key_default));
     s_api_key[34] = '\n'; // termination
   }
-
+  if (persist_exists(KEY_SAVED_LANG)) {
+    persist_read_data(KEY_SAVED_LANG, &myLang, 1);
+  }
 
 }
 
@@ -267,9 +275,14 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 #endif      
     }
   }
+  Tuple *select_language = dict_find(iter, MESSAGE_KEY_DIGIMEMessageKeySelLang);
+  if (select_language) {
+    myLang = select_language->value->cstring[0];
+    updateDateTime();
+  }
   if (configResponse) {
     // Request new weather data
-    owm_weather_fetch(weather_callback); 
+    owm_weather_fetch(weather_callback);
   }
   
   Tuple *reply_tuple = dict_find(iter, OWMWeatherAppMessageKeyReply);
@@ -441,7 +454,8 @@ static void deinit(void) {
   persist_write_bool(KEY_SAVED_FAHRENHEIT, temp_fahrenheit);
   // Save API key 
   persist_write_data(KEY_SAVED_APIKEY, s_api_key, sizeof(s_api_key));
-
+  // Save the language
+  persist_write_data(KEY_SAVED_LANG, &myLang, 1);
   
   owm_weather_deinit();
   window_destroy(s_main_window);
