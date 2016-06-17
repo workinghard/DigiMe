@@ -21,3 +21,11 @@ All the features are separated into different source files. It should be easy to
 ### Version 1.3 update
 It's now possible to configure temperature unit and provide your own API key. Time format is the same like you have on your phone.
 
+### Version 1.4 update
+You can now decide in which language the date should be displayed.
+Currently supported: 
+ * English
+ * Spanish
+ * German
+Send me translations for more, if you like ...
+
