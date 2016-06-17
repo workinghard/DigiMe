@@ -27,5 +27,6 @@ Currently supported:
  * English
  * Spanish
  * German
+ 
 Send me translations for more, if you like ...
 
