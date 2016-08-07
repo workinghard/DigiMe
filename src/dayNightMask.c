@@ -18,15 +18,16 @@ static const char *moon_phase_arr[] = { "0", "0", "a", "b", "c", "d", "e", "f", 
 int getMoonPhase() {
 	long lp = 2551443; 
 	// var now = new Date(year,month-1,day,20,35,0);						
-  struct tm now = *localtime(&(time_t){time(NULL)});
+  struct tm now = *localtime(&(time_t){getTime()});
 	//var new_moon = new Date(1970, 0, 7, 20, 35, 0);
-  struct tm newMoon = *localtime(&(time_t){time(NULL)});
+  struct tm newMoon = *localtime(&(time_t){getTime()});
   newMoon.tm_year = 70;
   newMoon.tm_mon = 0;
   newMoon.tm_mday = 7;
 	//var phase = ((now.getTime() - new_moon.getTime())/1000) % lp;
   long phase = (mktime(&now) - mktime(&newMoon)) % lp;  
 	return floor(phase /(24*3600)) + 1;
+  //return 1;
 }
 
 static void sun_layer_update_proc(Layer *layer, GContext *ctx) {
@@ -72,7 +73,7 @@ int getDayPosY(int x){
   return 25 - y;
 }
 int getDayPosX(time_t sunrise, time_t sunset){
-  time_t now = time(NULL);
+  time_t now = getTime();
   time_t dayDuration = sunset - sunrise;
   time_t dayTime = now - sunrise;
   int posX = 110 * dayTime / dayDuration;
@@ -86,11 +87,12 @@ int getNightPosY(int x){
 }
 int getNightPosX(time_t sunrise, time_t sunset){
   // Doesn't matter if we have data for actual day or following one
-  time_t now = time(NULL);
+  time_t now = getTime();
   time_t nightDuration = 86400 - (sunset - sunrise);
   time_t nightTime;
   if ( now < sunrise && now < sunset ) {
     // We have already data for the next day
+    APP_LOG(APP_LOG_LEVEL_INFO, "SunsetCalc: %ld", sunset - 86400);
     nightTime = now - (sunset - 86400);
   }else{
     nightTime = now - sunset;     
@@ -148,7 +150,7 @@ bool isNight(time_t now, time_t sunrise, time_t sunset) {
 bool isDay(){
   time_t sunset = getSunset();
   time_t sunrise = getSunrise();
-  time_t now = time(NULL);
+  time_t now = getTime();
   bool isDayTime = true;
   if ( isNight(now, sunrise, sunset) ) {
     isDayTime = false;
@@ -159,7 +161,7 @@ bool isDay(){
 void dayNight_update_pos() {
   time_t sunset = getSunset();
   time_t sunrise = getSunrise();
-  time_t now = time(NULL);
+  time_t now = getTime();
   //APP_LOG(APP_LOG_LEVEL_INFO, "Now: %ld", now);
   //APP_LOG(APP_LOG_LEVEL_INFO, "Sunset: %ld", sunset);
   //APP_LOG(APP_LOG_LEVEL_INFO, "Sunrise: %ld", sunrise);
@@ -183,6 +185,7 @@ void dayNight_update_pos() {
     int posX = getNightPosX(sunrise, sunset);
     // Reposition the moon
     layer_set_frame(text_layer_get_layer(s_moon_font_layer), GRect(posX, getNightPosY(posX),26,26));
+    //layer_set_frame(text_layer_get_layer(s_moon_font_layer), GRect(70, 20,26,26));
     allLayerUpdate(false);
   }
 }

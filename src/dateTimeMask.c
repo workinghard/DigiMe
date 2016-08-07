@@ -93,7 +93,7 @@ static void handle_minute_tick(struct tm* tick_time, TimeUnits units_changed) {
 // Force to update the time
 //
 void updateDateTime() {
-  time_t now = time(NULL);
+  time_t now = getTime();
   struct tm *current_time = localtime(&now);
   local_update_time(current_time);
   local_update_date(current_time);
@@ -105,6 +105,7 @@ void updateDateTime() {
 void dateTimeMask_load(Layer *window_layer) {
   // Create time layer
   GRect bounds = layer_get_bounds(window_layer);
+
   s_time_layer = text_layer_create(GRect(0, 68, bounds.size.w, 46));
   text_layer_set_text_color(s_time_layer, MY_TIME_FGND_COLOR);
   text_layer_set_background_color(s_time_layer, MY_TIME_BGND_COLOR);
@@ -113,7 +114,11 @@ void dateTimeMask_load(Layer *window_layer) {
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
   
   // Create date layer
+#ifdef PBL_PLATFORM_CHALK  
+  s_date_layer = text_layer_create(GRect(30,126,80, 32));
+#else
   s_date_layer = text_layer_create(GRect(16,126,80, 32));
+#endif  
   text_layer_set_text_color(s_date_layer, MY_DATE_FGND_COLOR);
   text_layer_set_background_color(s_date_layer, MY_DATE_BGND_COLOR);
   text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));

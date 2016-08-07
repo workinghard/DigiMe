@@ -38,7 +38,12 @@ static void battery_handler(BatteryChargeState new_state) {
 //
 void batteryMask_load(Layer *window_layer) {
   // Init the battery layer
+#ifdef PBL_PLATFORM_CHALK    
+  s_batt_layer = layer_create(GRect(112, 122, 10, 50));
+#else
   s_batt_layer = layer_create(GRect(98, 122, 10, 50));
+#endif
+
   layer_set_update_proc(s_batt_layer, batt_layer_update_callback);
   layer_add_child(window_layer, s_batt_layer);
   

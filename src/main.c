@@ -36,6 +36,13 @@ static const char api_key_default[] = "2cd34ef953aa6d4326799b5097536a0c";
 //static time_t lastFetch = 0.0;
 
 //
+// Time function for debuggung purpose
+time_t getTime() {
+  //return 1468301220; 
+  return time(NULL);  
+}
+
+//
 // Weather callback function --- BEGIN
 //
 void weather_callback(OWMWeatherInfo *info, OWMWeatherStatus status) {
@@ -47,7 +54,7 @@ void weather_callback(OWMWeatherInfo *info, OWMWeatherStatus status) {
       oldTemp = info->temp_c;
     }
     // In case we are getting the next day information too early
-    if (time(NULL) > sunset ) {
+    if (getTime() > sunset ) {
       sunrise = info->sunrise;
       sunset = info->sunset;  
       //APP_LOG(APP_LOG_LEVEL_INFO, "Updating sunrise");
@@ -56,7 +63,7 @@ void weather_callback(OWMWeatherInfo *info, OWMWeatherStatus status) {
     temp_layer_update_text();
     dayNight_update_pos();
     // save the timestamp
-    lastFetch = time(NULL);    
+    lastFetch = getTime();    
     // Save the weather icon
     info->icon[2] = '\n'; // Cut off the day/night information
     weatherIcon = atoi(info->icon); // TODO: replace atoi. Make it more input robust!
@@ -70,7 +77,7 @@ static void js_ready_handler(void *context) {
   owm_weather_fetch(weather_callback);
 }
 bool needToUpdate() {
-  time_t now = time(NULL);
+  time_t now = getTime();
   bool needUpdate = false;
   // We don't have a valid data
   if ( oldTemp == TEMP_NOT_VALID || sunrise == 0.0 || sunset == 0.0 ) {
@@ -135,7 +142,7 @@ void loadData() {
     persist_read_data(KEY_SAVED_SUNRISE, &sunrise, sizeof(time_t));
   }else{
     // if we do inital startup or after reset, just guess the value
-    time_t now = time(NULL);
+    time_t now = getTime();
     struct tm *current_time = localtime(&now);
     if ( current_time->tm_hour >= 6 ) { // 
       sunrise = now - ( current_time->tm_hour - 6 ) * 3600;
@@ -149,7 +156,7 @@ void loadData() {
   if ( persist_exists(KEY_SAVED_SUNSET) ){
     persist_read_data(KEY_SAVED_SUNSET, &sunset, sizeof(time_t));
   }else{
-    time_t now = time(NULL);
+    time_t now = getTime();
     struct tm *current_time = localtime(&now);
     if ( current_time->tm_hour >= 18 ) { // 
       sunset = now - ( current_time->tm_hour - 18 ) * 3600;
@@ -306,14 +313,16 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 #endif    
     Tuple *temp_tuple = dict_find(iter, OWMWeatherAppMessageKeyTempK);
     s_info->temp_k = temp_tuple->value->int32;
-    s_info->temp_c = s_info->temp_k - 273; 
-    s_info->temp_f = (temp_tuple->value->int32 - 273.15)* 1.8000 + 32.00;
+    s_info->temp_c = s_info->temp_k - 273.15; 
+    //s_info->temp_f = (temp_tuple->value->int32 - 273.15)* 1.8000 + 32.00;
+    // Make it more accurate
+    s_info->temp_f = round( temp_tuple->value->int32 * 0.018 - 459.67);
     //s_info->temp_f = ((s_info->temp_c * 9) / 5 /* *1.8 or 9/5 */) + 32;
-    
+
     Tuple *icon_tuple = dict_find(iter, OWMWeatherAppMessageKeyIcon);
     strncpy(s_info->icon, icon_tuple->value->cstring, OWM_WEATHER_BUFFER_SIZE);
     
-    s_info->timestamp = time(NULL);
+    s_info->timestamp = getTime();
 
     s_status = OWMWeatherStatusAvailable;
     //app_message_deregister_callbacks();

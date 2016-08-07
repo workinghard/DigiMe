@@ -6,7 +6,7 @@
 #include "dayNightMask.h"
 
 // Activate this if you want to see debug messages
-//#define SETDEBUG 1
+#define SETDEBUG 1
 
 #define TEMP_NOT_VALID -999
 #define KeySelTime 10
@@ -101,3 +101,4 @@ int getWeatherIcon();
 time_t getSunrise();
 time_t getSunset();
 char getLang();
+time_t getTime();

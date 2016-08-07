@@ -4,7 +4,11 @@
 
 #define MY_BACKGROUND_COLOR GColorBlack 
 #define MY_MOON_COLOR GColorWhite
+#ifdef PBL_BW
+#define MY_BLACK_MOON_COLOR GColorLightGray 
+#else
 #define MY_BLACK_MOON_COLOR GColorDarkGray
+#endif
 #define MY_LINE_FGND_COLOR GColorWhite
 #define MY_TEMP_FGND_COLOR GColorWhite
 #define MY_TEMP_BGND_COLOR GColorBlack

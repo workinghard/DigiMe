@@ -19,7 +19,7 @@ function owmWeatherSendToPebble(json) {
     'OWMWeatherAppMessageKeyIcon': json.weather[0].icon,
     'OWMWeatherAppMessageKeyHum': json.weather[0].humidity,
     'OWMWeatherAppMessageKeyDescriptionShort': json.weather[0].main,
-    'OWMWeatherAppMessageKeyTempK': json.main.temp_max,
+    'OWMWeatherAppMessageKeyTempK': json.main.temp*100, // Need to be more precise
     'OWMWeatherAppMessageKeyName': json.name,
     'OWMWeatherAppMessageKeySunrise': json.sys.sunrise,
     'OWMWeatherAppMessageKeySunset': json.sys.sunset
@@ -29,8 +29,8 @@ function owmWeatherSendToPebble(json) {
 function owmWeatherLocationSuccess(pos) {
   var url = 'http://api.openweathermap.org/data/2.5/weather?lat=' + 
     pos.coords.latitude + '&lon=' + pos.coords.longitude + '&appid=' + owmWeatherAPIKey;
-  //console.log('owm-weather: Location success. Contacting OpenWeatherMap.org...');
-  //console.log(url);
+  console.log('owm-weather: Location success. Contacting OpenWeatherMap.org...');
+  console.log(url);
 
   owmWeatherXHR(url, 'GET', function(responseText) {
     //console.log('owm-weather: Got API response!');

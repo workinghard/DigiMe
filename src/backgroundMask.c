@@ -9,8 +9,13 @@ static TextLayer *s_temp_layer;  // Temperature
 void line_layer_update_callback(Layer *layer, GContext* ctx) {
   graphics_context_set_stroke_color(ctx, MY_LINE_FGND_COLOR);
   // Horizontal line
+#ifdef PBL_PLATFORM_CHALK  
+  graphics_draw_line(ctx, GPoint(10, 0), GPoint(166, 0));
+  graphics_draw_line(ctx, GPoint(10, 1), GPoint(166, 1)); 
+#else
   graphics_draw_line(ctx, GPoint(10, 0), GPoint(136, 0));
   graphics_draw_line(ctx, GPoint(10, 1), GPoint(136, 1)); 
+#endif
 }
 
 //
@@ -31,12 +36,17 @@ void temp_layer_update_text() {
 void backgroundMask_load(Layer *window_layer) {
   // Init the line layer
   GRect bounds = layer_get_bounds(window_layer);
+
   s_line_layer = layer_create(GRect(0, 120, bounds.size.w, 5)); 
   layer_set_update_proc(s_line_layer, line_layer_update_callback); 
   layer_add_child(window_layer, s_line_layer);
   
   // Init the temperature layer
-  s_temp_layer = text_layer_create(GRect(105,126,30, 32));
+#ifdef PBL_PLATFORM_CHALK  
+  s_temp_layer = text_layer_create(GRect(125,126,30, 40));
+#else
+  s_temp_layer = text_layer_create(GRect(105,126,30, 40));
+#endif
   text_layer_set_text_color(s_temp_layer, MY_TEMP_FGND_COLOR);
   text_layer_set_background_color(s_temp_layer, MY_TEMP_BGND_COLOR);
   text_layer_set_font(s_temp_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
