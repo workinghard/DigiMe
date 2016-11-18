@@ -27,7 +27,7 @@ int getMoonPhase() {
 	//var phase = ((now.getTime() - new_moon.getTime())/1000) % lp;
   long phase = (mktime(&now) - mktime(&newMoon)) % lp;  
 	return floor(phase /(24*3600)) + 1;
-  //return 1;
+  //return 17;
 }
 
 static void sun_layer_update_proc(Layer *layer, GContext *ctx) {
