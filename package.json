@@ -41,13 +41,15 @@
         },
         "sdkVersion": "3",
         "targetPlatforms": [
+            "aplite",
             "basalt",
-            "chalk"
+            "chalk",
+            "diorite"
         ],
         "uuid": "e953abd3-730a-498f-bb46-159905b5a570",
         "watchapp": {
             "watchface": true
         }
     },
-    "version": "1.6.0"
+    "version": "1.8.0"
 }

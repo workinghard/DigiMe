@@ -173,8 +173,10 @@ void dayNight_update_pos() {
 #endif    
     // Calculate the position
     int posX = getDayPosX(sunrise, sunset);
+    // For pebble round we need a slight offset
+    int posXOffset = posX + XOFFSET;
     // Reposition the sun
-    layer_set_frame(s_sun_layer, GRect(posX, getDayPosY(posX), 40, 40));
+    layer_set_frame(s_sun_layer, GRect(posXOffset, getDayPosY(posX), 40, 40));
     // Make the sun layer with day background visible
     allLayerUpdate(true);
   }else{ 
@@ -183,8 +185,10 @@ void dayNight_update_pos() {
     APP_LOG(APP_LOG_LEVEL_INFO, "Is night");
 #endif
     int posX = getNightPosX(sunrise, sunset);
+    // For pebble round we need a slight offset
+    int posXOffset = posX + XOFFSET;
     // Reposition the moon
-    layer_set_frame(text_layer_get_layer(s_moon_font_layer), GRect(posX, getNightPosY(posX),26,26));
+    layer_set_frame(text_layer_get_layer(s_moon_font_layer), GRect(posXOffset, getNightPosY(posX),26,26));
     //layer_set_frame(text_layer_get_layer(s_moon_font_layer), GRect(70, 20,26,26));
     allLayerUpdate(false);
   }
