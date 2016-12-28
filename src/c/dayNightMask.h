@@ -4,7 +4,7 @@
 #include <math.h>
 
 #ifdef PBL_ROUND
-#define XOFFSET 20
+#define XOFFSET 18
 #else
 #define XOFFSET 0
 #endif
